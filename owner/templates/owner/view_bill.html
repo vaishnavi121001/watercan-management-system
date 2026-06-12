@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% load static %}
+  <meta charset="UTF-8">
+  <title>Customer Bill</title>
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <style>
+    body {
+      background: url("{% static 'images/img_5.png' %}") no-repeat center center fixed;
+      background-size: cover;
+      padding: 40px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .bill-container {
+      background-color: rgba(255, 255, 255, 0.95);
+      padding: 30px;
+      max-width: 900px;
+      margin: auto;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+
+    .header-section {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 2px solid #0f766e;
+      padding-bottom: 20px;
+      margin-bottom: 30px;
+    }
+
+    .owner-details,
+    .customer-details {
+      width: 48%;
+    }
+
+    .owner-logo img {
+      width: 100px;
+      height: 100px;
+      object-fit: contain;
+      border-radius: 10px;
+    }
+
+    .section-title {
+      font-weight: bold;
+      color: #0f766e;
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+
+    .info-line {
+      margin: 5px 0;
+    }
+
+    .bill-summary {
+      border: 1px solid #cbd5e1;
+      padding: 20px;
+      border-radius: 10px;
+      background-color: #f8fafc;
+    }
+
+    .bill-summary h4 {
+      color: #1e3a8a;
+      margin-bottom: 20px;
+    }
+
+    .qr-code {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .qr-code img {
+      width: 150px;
+      height: 150px;
+      object-fit: contain;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      padding: 5px;
+    }
+
+    .status-paid {
+      color: green;
+      font-weight: bold;
+    }
+
+    .status-pending {
+      color: red;
+      font-weight: bold;
+    }
+
+    .back-btn {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .back-btn a {
+      text-decoration: none;
+      color: #1e3a8a;
+      font-weight: 600;
+    }
+
+    .back-btn a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bill-container">
+    <div class="header-section">
+      <!-- Owner Details -->
+      <div class="owner-details">
+        <div class="section-title">🏢 Owner / Company Info</div>
+        <div class="info-line"><strong>{{ owner.owner_name }}</strong></div>
+        <div class="info-line">{{ owner.company_name }}</div>
+        <div class="info-line">📍 {{ owner.address }}</div>
+        <div class="info-line">📞 {{ owner.contact_number }}</div>
+        <div class="info-line">✉ {{ owner.email }}</div>
+      </div>
+
+      <!-- Customer Details -->
+      <div class="customer-details">
+        <div class="section-title">👤 Customer Info</div>
+        <div class="info-line"><strong>{{ bill.customer.full_name }}</strong></div>
+        <div class="info-line">Username: {{ bill.customer.user.username }}</div>
+        <div class="info-line">Address: {{ bill.customer.address }}</div>
+        <div class="info-line">Email: {{ bill.customer.user.email }}</div>
+        <div class="info-line">Bill Month: {{ bill.month|date:"F Y" }}</div>
+      </div>
+    </div>
+
+    <!-- Bill Summary -->
+    <div class="bill-summary">
+      <h4>🧾 Bill Summary</h4>
+      <p><strong>🛢 Total Water Cans:</strong> {{ bill.total_cans }}</p>
+      <p><strong>💰 Amount Due:</strong> ₹{{ bill.amount_due }}</p>
+      <p><strong>Status:</strong>
+        {% if bill.payment_status == 'Paid' %}
+          <span class="status-paid">✔ Paid</span>
+        {% else %}
+          <span class="status-pending">❌ Pending</span>
+        {% endif %}
+      </p>
+    </div>
+
+    {% if bill.qr_code_base64 %}
+      <div class="qr-code">
+        <img src="data:image/png;base64,{{ bill.qr_code_base64 }}" alt="QR Code">
+        <p><small>Scan to Pay (GPay / PhonePe)</small></p>
+      </div>
+    {% endif %}
+
+    <div class="back-btn">
+      <a href="{% url 'owner:generate_all_bills' %}">← Back to All Bills</a>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat History</title>
+    <style>
+        body {
+            font-family: Arial;
+            padding: 20px;
+            background-color: #f2f2f2;
+        }
+        .chat-entry {
+            background: white;
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .question { font-weight: bold; color: #333; }
+        .response { margin-top: 8px; color: #444; }
+        .timestamp { font-size: 12px; color: gray; }
+    </style>
+</head>
+<body>
+    <h2>📜 Your Chat History</h2>
+    {% for entry in history %}
+    <div class="chat-entry">
+        <div class="timestamp">{{ entry.timestamp|date:"d M Y, H:i" }}</div>
+        <div class="question">You: {{ entry.question }}</div>
+        <div class="response"><strong>Bot:</strong> {{ entry.response }}</div>
+    </div>
+    {% empty %}
+    <p>No chat history found.</p>
+    {% endfor %}
+    <a href="{% url 'customer_dashboard' %}">⬅ Back to Dashboard</a>
+</body>
+</html>

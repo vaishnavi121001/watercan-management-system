@@ -1,0 +1,108 @@
+{% extends 'owner/base.html' %}
+
+{% block content %}
+<style>
+    body {
+        background-color: #f4f7fa;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .container {
+        max-width: 600px;
+        margin-top: 50px;
+        background: #fff;
+        padding: 30px 40px;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    }
+
+    h2 {
+        text-align: center;
+        color: #0f766e;
+        font-weight: bold;
+        margin-bottom: 30px;
+    }
+
+    label {
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #333;
+    }
+
+    .form-control {
+        border-radius: 8px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        background-color: #fdfdfd;
+        transition: border-color 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+    }
+
+    .btn-primary {
+        width: 100%;
+        background-color: #0f766e;
+        border: none;
+        padding: 12px;
+        font-weight: 600;
+        font-size: 16px;
+        border-radius: 8px;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: #0f766e;
+    }
+
+    .btn-secondary {
+        width: 100%;
+        margin-top: 10px;
+        padding: 10px;
+        font-weight: 600;
+        border-radius: 8px;
+        background-color: #0f766e;
+        color: white;
+        border: none;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+    }
+</style>
+
+<div class="container">
+    <h2>🚚 Assign Delivery Schedule</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="form-group mb-4">
+            <label for="schedule_id">📅 Select Customer Schedule</label>
+            <select name="schedule_id" id="schedule_id" class="form-control" required>
+                <option value="" disabled selected>Choose a schedule</option>
+                {% for schedule in schedules %}
+                    <option value="{{ schedule.id }}">
+                        {{ schedule.customer.full_name }} — {{ schedule.delivery_time }} — {{ schedule.cans_required }} cans
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group mb-4">
+            <label for="boy_id">👷 Select Delivery Boy</label>
+            <select name="boy_id" id="boy_id" class="form-control" required>
+                <option value="" disabled selected>Choose a delivery boy</option>
+                {% for boy in delivery_boys %}
+                    <option value="{{ boy.id }}">{{ boy.user.username }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">✅ Assign Delivery</button>
+        <a href="{% url 'owner:owner_dashboard' %}" class="btn btn-secondary">⬅️ Back to Dashboard</a>
+    </form>
+</div>
+{% endblock %}

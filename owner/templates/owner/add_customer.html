@@ -1,0 +1,174 @@
+
+{% load form_tags %}
+
+{% block content %}
+<style>
+    body {
+        background-color: #f9f9f9;
+        font-family: 'Segoe UI', Tahoma, sans-serif;
+        color: #333;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 30px;
+        background-color: #fff;
+        border-radius: 12px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.05);
+    }
+
+    h2 {
+        text-align: center;
+        color: #0f766e;
+        margin-bottom: 30px;
+        font-weight: 700;
+    }
+
+    form {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px 30px;
+    }
+
+    .form-group {
+        position: relative;
+        width: 100%;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="file"],
+    input[type="password"],
+    textarea,
+    select {
+        width: 100%;
+        padding: 14px 16px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        background-color: #fafafa;
+        font-size: 1rem;
+        transition: border-color 0.3s;
+        box-sizing: border-box;
+    }
+
+    input[type="file"] {
+        padding: 8px 10px;
+    }
+
+    input:focus, textarea:focus, select:focus {
+        border-color: #0d6efd;
+        outline: none;
+        background-color: #fff;
+    }
+
+    /* Hide original labels */
+    label {
+        display: none;
+    }
+
+    .errorlist {
+        color: red;
+        font-size: 0.85rem;
+        margin-top: 4px;
+    }
+
+    button[type="submit"] {
+        grid-column: 1 / -1;
+        padding: 14px;
+        background-color: #0f766e;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    button[type="submit"]:hover {
+        background-color: #0f766e;
+        transform: scale(1.02);
+    }
+
+    .back-btn {
+        display: block;
+        text-align: center;
+        margin-top: 25px;
+        text-decoration: none;
+        font-weight: 600;
+        color: #0f766e;
+        transition: color 0.3s ease;
+    }
+
+    .back-btn:hover {
+        color: #0a58ca;
+        text-decoration: underline;
+    }
+
+    @media (max-width: 700px) {
+        form {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="container">
+    <h2> Add New Customer</h2>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="form-group">
+            {{ form.username|add_attr:"placeholder:👤 Username" }}
+            {{ form.username.errors }}
+        </div>
+
+        <div class="form-group">
+            {{ form.full_name|add_attr:"placeholder:📝 Full Name" }}
+            {{ form.full_name.errors }}
+        </div>
+
+        <div class="form-group">
+            {{ form.email|add_attr:"placeholder:📧 Email" }}
+            {{ form.email.errors }}
+        </div>
+
+        <div class="form-group">
+            {{ form.phone_number|add_attr:"placeholder:📞 Phone Number" }}
+            {{ form.phone_number.errors }}
+        </div>
+
+        <div class="form-group">
+            {{ form.address|add_attr:"placeholder:🏠 Address" }}
+            {{ form.address.errors }}
+        </div>
+
+        <div class="form-group">
+            {{ form.adhar|add_attr:"placeholder:🆔 Aadhar Number" }}
+            {{ form.adhar.errors }}
+        </div>
+        <div class="form-group">
+            {{ form.password1|add_attr:"placeholder:🔑 Password" }}
+            {{ form.password1.errors }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.adharupload.id_for_label }}">Upload Aadhar 🗂️</label>
+            {{ form.adharupload }}
+            {{ form.adharupload.errors }}
+        </div>
+
+
+<div class="form-group">
+            {{ form.password2|add_attr:"placeholder:🔑 Confirm Password" }}
+            {{ form.password2.errors }}
+        </div>
+
+
+        <button type="submit">➕ Add Customer</button>
+    </form>
+
+    <a href="{% url 'owner:owner_dashboard' %}" class="back-btn">⬅ Back to Dashboard</a>
+</div>
+
+{% endblock %}

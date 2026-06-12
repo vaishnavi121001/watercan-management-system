@@ -1,0 +1,95 @@
+{% extends 'owner/base.html' %}
+
+{% block content %}
+<style>
+    body {
+        background-color: #fefefe;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #333;
+    }
+
+    .assign-container {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 30px;
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.07);
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 30px;
+        color: #0f766e;
+        font-size: 1.8rem;
+        text-shadow: 0 1px 1px rgba(0,0,0,0.1);
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    form p {
+        display: flex;
+        flex-direction: column;
+    }
+
+    form label {
+        font-weight: 600;
+        margin-bottom: 6px;
+        color: #0f766e;
+    }
+
+    form select, form input {
+        padding: 10px 12px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 1rem;
+        background-color: #f9f9f9;
+    }
+
+    button[type="submit"] {
+        padding: 12px;
+        background-color: #0f766e;
+        color: white;
+        font-weight: bold;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    button[type="submit"]:hover {
+        background-color: #0d5e58;
+        transform: scale(1.03);
+    }
+
+    .back-link {
+        display: block;
+        margin-top: 20px;
+        text-align: center;
+        text-decoration: none;
+        font-weight: 600;
+        color: #0f766e;
+        transition: color 0.3s ease;
+    }
+
+    .back-link:hover {
+        color: #0d5e58;
+        text-decoration: underline;
+    }
+</style>
+
+<div class="assign-container">
+    <h2>🚚 Assign Delivery Boy for Bulk Order</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Assign</button>
+    </form>
+    <a href="{% url 'owner:bulk_orders_list' %}" class="back-link">⬅ Back to Bulk Orders</a>
+</div>
+{% endblock %}

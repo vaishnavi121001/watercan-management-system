@@ -1,0 +1,38 @@
+{% extends 'delivery/base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow rounded-4 border-0">
+        <div class="card-header bg-primary text-white rounded-top-4">
+            <h4 class="mb-0">📦 Upload Delivery Proof for
+                {% if type == 'bulk' %}
+                    {{ delivery.customer.user.username }} (Bulk Order)
+                {% else %}
+                    {{ delivery.schedule.customer.user.username }}
+                {% endif %}
+            </h4>
+        </div>
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- Hidden field to maintain delivery type -->
+                <input type="hidden" name="type" value="{{ type }}">
+
+
+                <div class="mb-3">
+                    <label for="{{ form.cans_delivered.id_for_label }}" class="form-label">🧊 Number of Cans Delivered</label>
+                    {{ form.cans_delivered }}
+                </div>
+
+                <div class="mb-3">
+                    <label for="{{ form.cans_received_empty.id_for_label }}" class="form-label">🪣 Empty Cans Received from Customer</label>
+                    {{ form.cans_received_empty }}
+                </div>
+
+                <button type="submit" class="btn btn-success rounded-pill">✅ Submit Proof</button>
+                <a href="{% url 'delivery:dashboard' %}" class="btn btn-outline-secondary rounded-pill ms-2">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

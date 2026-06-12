@@ -1,0 +1,216 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Customer Dashboard{% endblock %}
+
+{% block content %}
+
+<h1>Welcome, {{ customer.full_name }}</h1>
+
+<div class="dashboard-grid">
+    <div class="section">
+        <h2>👤 Profile Info</h2>
+        <p><strong>Username:</strong> {{ customer.user.username }}</p>
+        <p><strong>Email:</strong> {{ customer.user.email }}</p>
+        <p><strong>Phone:</strong> {{ customer.phone_number }}</p>
+        <p><strong>Address:</strong> {{ customer.address }}</p>
+        <a class="btn btn-danger" href="{% url 'customer_logout' %}">Logout</a>
+    </div>
+
+    <div class="section">
+        <h2>📅 Daily Water Can Schedule</h2>
+        <a class="btn btn-primary" href="{% url 'manage_schedule' %}">Manage Daily Schedule</a>
+        {% if daily_schedule %}
+        <p><strong>Water Can:</strong> {{ daily_schedule.water_can.name }}</p>
+        <p><strong>Quantity per Day:</strong> {{ daily_schedule.quantity_per_day }}</p>
+        <p><strong>Start Date:</strong> {{ daily_schedule.start_date }}</p>
+        <p><strong>Delivery Time:</strong> {{ daily_schedule.delivery_time }}</p>
+        <p><strong>Active:</strong> {{ daily_schedule.is_active }}</p>
+        {% else %}
+        <p>You have not scheduled a daily delivery yet.</p>
+        {% endif %}
+    </div>
+
+<div class="section">
+    <h2>💸 All Monthly Bills</h2>
+    {% if bills %}
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Month</th>
+                <th>Total Cans</th>
+                <th>Amount Due (₹)</th>
+                <th>Payment Status</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for bill in bills %}
+            <tr>
+                <td>{{ bill.month|date:"F Y" }}</td>
+                <td>{{ bill.total_cans }}</td>
+                <td>{{ bill.amount_due }}</td>
+                <td>{{ bill.payment_status }}</td>
+                <td>
+                    {% if bill.payment_status == 'Unpaid' %}
+                    <a class="btn btn-success btn-sm" href="{% url 'pay_bill' bill.id %}">Pay Now</a>
+                    {% elif bill.payment_status == 'Pending' %}
+                    <a class="btn btn-warning btn-sm" href="{% url 'confirm_payment' bill.id %}">Confirm Payment</a>
+                    {% else %}
+                    <a href="{% url 'view_bill_detail' bill.id %}" class="btn btn-sm btn-outline-success mt-2">🧾 View Bill</a>
+
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p>No bills generated yet.</p>
+    {% endif %}
+    <a class="btn btn-outline-info" href="{% url 'generate_bill' %}">Generate Monthly Bill</a>
+</div>
+
+ <div class="section">
+    <h5>🤖 Help Desk</h5>
+    <p class="mb-1">Need assistance? Contact us:</p>
+    <ul class="list-unstyled small">
+        <li>📞 <strong>+91-98765-43210</strong></li>
+        <li>📧 <a href="mailto:support@watercansystem.com">support@watercansystem.com</a></li>
+        <li>📍 Rajapeth, Amravati</li>
+    </ul>
+    <a class="btn btn-sm btn-secondary" href="{% url 'chat_history' %}">📜 Chat History</a>
+</div>
+
+</div>
+
+<!-- Cans Currently With Customer -->
+<div class="alert alert-success shadow rounded-pill text-center my-3">
+    <h4 class="mb-0">🏠 You currently have <strong>{{ cans_at_customer }}</strong> water can(s)</h4>
+</div>
+
+
+
+<div class="section">
+    <h2>✅ Recent Deliveries</h2>
+    {% if daily_logs %}
+    <div class="table-responsive">
+        <!-- Daily Logs Table -->
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Date</th>
+                <th>Quantity</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for log in daily_logs %}
+            <tr>
+                <td>{{ log.delivery_date }}</td>
+                <td>
+                    {% if log.modified_quantity %}
+                    {{ log.modified_quantity }} (Modified)
+                    {% else %}
+                    {{ log.schedule.quantity_per_day }}
+                    {% endif %}
+                </td>
+
+                <td>{{ log.status }}</td>
+
+                <td>
+                    {% if log.status == 'Scheduled' %}
+                    <a class="btn btn-warning btn-sm" href="{% url 'cancel_delivery' log.id %}">Cancel</a>
+                    <button class="btn btn-info btn-sm" data-bs-toggle="modal"
+                            data-bs-target="#requestModal{{ log.id }}">Request
+                    </button>
+                    {% elif log.status == 'Delivered' and not log.confirmed_by_customer %}
+                    <a class="btn btn-primary btn-sm" href="{% url 'confirm_delivery' log.id %}">Confirm</a>
+
+                    {% else %}
+                    -
+                    {% endif %}
+                </td>
+
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+    {% else %}
+    <p>No delivery logs found.</p>
+    {% endif %}
+</div>
+
+{% for log in daily_logs %}
+<div class="modal fade" id="requestModal{{ log.id }}" tabindex="-1" aria-labelledby="requestModalLabel{{ log.id }}"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="post" action="{% url 'request_modification' log.id %}">
+            {% csrf_token %}
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="requestModalLabel{{ log.id }}">Modify Delivery Quantity</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Scheduled cans:</strong> {{ log.schedule.quantity_per_day }}</p>
+                    <label for="num_cans">New desired number of cans for {{ log.delivery_date }}:</label>
+                    <input type="number" name="num_cans" class="form-control" required min="0">
+                    <small class="text-muted">Enter 0 if you want to skip delivery.</small>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Submit Request</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endfor %}
+
+<div class="section">
+    <h2>📦 Recent Bulk Orders</h2>
+    {% if bulk_orders %}
+    <div class="table-responsive">
+        <!-- Bulk Orders Table -->
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Event</th>
+                <th>Quantity</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Status</th>
+                <th>Delivery Assign</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for order in bulk_orders %}
+            <tr>
+                <td>{{ order.event_name }}</td>
+                <td>{{ order.quantity }}</td>
+                <td>{{ order.delivery_date }}</td>
+                <td>{{ order.delivery_time }}</td>
+                <td>{{ order.status }}</td>
+                <td>{% if order.delivery_boy %}
+                    {{ order.delivery_boy.full_name }}
+                    {% else %}
+                    Not Assigned
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+    {% else %}
+    <p>No bulk orders placed.</p>
+    {% endif %}
+    <a class="btn btn-secondary" href="{% url 'place_bulk_order' %}">Place Bulk Order</a>
+</div>
+{% endblock %}

@@ -1,0 +1,106 @@
+{% extends 'owner/base.html' %}
+{% block content %}
+<style>
+    body {
+        background-color: #f0f4f8;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .form-container {
+        max-width: 600px;
+        margin: 50px auto;
+        background: #ffffff;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 25px;
+        color: #0f766e;
+        font-size: 26px;
+        font-weight: 700;
+    }
+
+    label {
+        font-weight: 600;
+        display: block;
+        margin-top: 15px;
+        margin-bottom: 5px;
+        color: #374151;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="email"],
+    input[type="file"],
+    select,
+    textarea {
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #cbd5e1;
+        background-color: #f9fafb;
+        margin-bottom: 15px;
+        font-size: 15px;
+        transition: border 0.3s ease;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+        border-color: #0f766e;
+        background-color: #fff;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.2);
+    }
+
+    .btn-primary,
+    .back-btn {
+        display: inline-block;
+        width: 48%;
+        text-align: center;
+        padding: 12px;
+        margin-top: 10px;
+        font-weight: 600;
+        font-size: 15px;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-primary {
+        background-color: #0f766e;
+        color: white;
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background-color: #115e59;
+    }
+
+    .back-btn {
+        background-color: #64748b;
+        color: white;
+        margin-left: 4%;
+    }
+
+    .back-btn:hover {
+        background-color: #475569;
+    }
+</style>
+
+<div class="form-container">
+    <h2>📝 Update Information</h2>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <div style="display: flex; justify-content: space-between;">
+            <button type="submit" class="btn-primary">✅ Update</button>
+            <a href="{% url 'owner:owner_dashboard' %}" class="back-btn">⬅️ Back to Dashboard</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

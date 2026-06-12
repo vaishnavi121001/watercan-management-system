@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% load static %}
+  <meta charset="UTF-8">
+  <title>Owner Dashboard</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      padding: 0;
+      margin: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      min-height: 100vh;
+      background: url("{% static 'images/img_5.png' %}") no-repeat center center fixed;
+      background-size: cover;
+      color: #1e293b;
+    }
+
+    .sidebar {
+      width: 240px;
+      background: linear-gradient(180deg, #1e3a8a, #0f172a);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      position: fixed;
+      height: 100vh;
+      box-shadow: 2px 0 15px rgba(0, 0, 0, 0.4);
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .sidebar h2 {
+      font-size: 20px;
+      margin-bottom: 30px;
+      font-weight: 600;
+      color: #0f766e;
+    }
+
+    .nav-link {
+      color: #cbd5e1;
+      text-decoration: none;
+      padding: 12px 16px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      display: block;
+      transition: background 0.3s;
+    }
+
+    .nav-link:hover {
+      background-color: #334155;
+    }
+
+    .main {
+      margin-left: 240px;
+      flex-grow: 1;
+      padding: 30px;
+      color: #1e293b;
+    }
+
+    .topbar h1 {
+      font-size: 28px;
+      font-weight: 600;
+      color: #0f766e;
+      text-shadow: 0 0 5px rgba(96, 165, 250, 0.4);
+    }
+
+    .logout-btn {
+      background: linear-gradient(to right, #2563eb, #1e40af);
+      color: white;
+      padding: 10px 18px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(30, 64, 175, 0.4);
+      transition: all 0.3s ease;
+    }
+
+    .logout-btn:hover {
+      background: #1e3a8a;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      color: #1e293b;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 12px 24px rgba(96, 165, 250, 0.2);
+    }
+
+    .stat-card h3 {
+      font-size: 16px;
+      color: #1e293b;
+      margin-bottom: 12px;
+    }
+
+    .stat-card button {
+      background: linear-gradient(to right, #0f766e, #2563eb);
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s;
+      box-shadow: 0 4px 10px rgba(59, 130, 246, 0.4);
+    }
+
+    .stat-card button:hover {
+      background: #1d4ed8;
+      transform: scale(1.05);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+      margin-top: 40px;
+    }
+
+    .actions a {
+      background: linear-gradient(to right, #0f766e, #047857);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      text-align: center;
+      min-width: 180px;
+    }
+
+    .actions a:hover {
+      background: #0f766e;
+      transform: scale(1.03);
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        justify-content: space-around;
+      }
+
+      .main {
+        margin-left: 0;
+        padding: 20px;
+        color: #1e293b;
+      }
+
+      .topbar h1 {
+        font-size: 22px;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="main">
+  <div class="topbar">
+    <h1>📋 Owner Dashboard</h1>
+  </div>
+<!-- Left Side: Admin Profile -->
+<div class="stat-card" style="flex: 0 0 450px;">
+  <div style="display: flex; flex-direction: column; align-items: center;">
+    <img src="{{ profile.profile_photo.url }}" alt="Profile Photo" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid #1e40af; margin-bottom: 16px;">
+    <h3 style="color: #0f766e;">👤 Admin Profile</h3>
+    <p><strong>Name:</strong> {{ profile.owner_name }}</p>
+    <p><strong>Company:</strong> {{ profile.company_name }}</p>
+    <p><strong>Email:</strong> {{ profile.email }}</p>
+    <p><strong>Contact:</strong> {{ profile.contact_number }}</p>
+    <p><strong>Address:</strong> {{ profile.address }}</p>
+    <a href="{% url 'owner:update_profile' %}" class="logout-btn" style="margin-top: 10px;">✏ Update Profile</a>
+  </div>
+</div>
+  <!-- Cards Only (Image Removed) -->
+  <div>
+    <!-- Row 1 -->
+    <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr);">
+      <div class="stat-card">
+        <h3>Total Customers</h3>
+        <button onclick="window.location.href='{% url 'owner:view_customers' %}'">View</button>
+      </div>
+      <div class="stat-card">
+        <h3>Total Delivery Boys</h3>
+        <button onclick="window.location.href='{% url 'owner:view_delivery_boys' %}'">View</button>
+      </div>
+      <div class="stat-card">
+        <h3>Orders This Month</h3>
+        <button onclick="window.location.href='{% url 'owner:schedule_list' %}'">View</button>
+      </div>
+    </div>
+
+    <!-- Row 2 -->
+    <div class="stats-grid" style="grid-template-columns: repeat(2, 1fr); justify-content: center; margin-top: 30px;">
+      <div class="stat-card">
+        <h3>Total Cans in Stock</h3>
+        <button onclick="window.location.href='{% url 'owner:cans_stock' %}'">View</button>
+      </div>
+
+      <div class="stat-card">
+        <h3>Bulk Orders</h3>
+        <button onclick="window.location.href='{% url 'owner:bulk_orders_list' %}'">View</button>
+      </div>
+      <div class="stat-card">
+        <h3>Assign All Deliveries</h3>
+        <button onclick="window.location.href='{% url 'owner:generate_logs' %}'">Assign</button>
+      </div>
+    </div>
+    <div class="stat-card">
+            <h3>Generate Bill for Customers</h3>
+            <button onclick="window.location.href='{% url 'owner:generate_all_bills' %}'">View</button>
+          </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="actions">
+    <a href="{% url 'owner:add_customer' %}">➕ Add Customer</a>
+    <a href="{% url 'owner:add_delivery_boy' %}">➕ Add Delivery Boy</a>
+    <a href="{% url 'owner:add_inventory' %}">📦 Add Stock</a>
+    <a href="{% url 'owner:schedule_list' %}">🗓 View Schedule List</a>
+    <a href="{% url 'owner:assign_delivery' %}">🚚 Assign Delivery Boy</a>
+    <a href="{% url 'owner:assigned_deliveries' %}">📬 Assigned Deliveries</a>
+    <a href="{% url 'owner:logout' %}" class="logout-btn">Logout</a>
+  </div>
+</div>
+
+</body>
+</html>

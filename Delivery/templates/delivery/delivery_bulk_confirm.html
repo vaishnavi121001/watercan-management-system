@@ -1,0 +1,51 @@
+{% extends "delivery/base.html" %}
+
+{% block title %}Bulk Delivery Confirmation{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow border-0 rounded-4">
+        <div class="card-body">
+
+            <h2 class="mb-4 text-center fw-bold text-primary">📋 Confirm Bulk Deliveries</h2>
+
+            <form method="post" enctype="multipart/form-data" class="row g-3">
+                {% csrf_token %}
+                
+                <!-- Example fields: select event, number of cans, photo proof upload -->
+                <div class="col-md-6">
+                    <label class="form-label">Event/Organization Name</label>
+                    {{ form.event_name }}
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Location Address</label>
+                    {{ form.delivery_address }}
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Total Cans Delivered</label>
+                    {{ form.cans_delivered }}
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Empty Cans Received</label>
+                    {{ form.cans_received_empty }}
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Upload Delivery Photo</label>
+                    {{ form.proof_photo }}
+                </div>
+
+                <div class="col-12 text-center mt-3">
+                    <button type="submit" class="btn btn-success btn-lg rounded-pill px-4">✅ Confirm Bulk Delivery</button>
+                    <a href="{% url 'delivery:dashboard' %}" class="btn btn-outline-secondary btn-lg ms-3 rounded-pill">Back to Dashboard</a>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

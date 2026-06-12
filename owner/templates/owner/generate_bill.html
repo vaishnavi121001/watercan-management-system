@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% load static %}
+  <meta charset="UTF-8">
+  <title>Generate Customer Bill</title>
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <style>
+    body {
+      background: url("{% static 'images/img_5.png' %}") no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 40px;
+      color: #1e293b;
+    }
+
+    .container {
+      background-color: rgba(255, 255, 255, 0.85);
+      border-radius: 16px;
+      padding: 30px;
+      max-width: 900px;
+      margin: auto;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #0f766e;
+    }
+
+    .form-label {
+      font-weight: 600;
+    }
+
+    .btn-generate {
+      background: linear-gradient(to right, #0f766e, #1d4ed8);
+      color: white;
+      padding: 10px 20px;
+      font-weight: 600;
+      border-radius: 8px;
+      border: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+    }
+
+    .btn-generate:hover {
+      background: #1e3a8a;
+      transform: scale(1.05);
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 20px;
+      text-decoration: none;
+      color: #1e3a8a;
+      font-weight: 500;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .bill-card {
+      background-color: #f0fdf4;
+      border: 1px solid #34d399;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+
+    .bill-card img {
+      width: 120px;
+      height: 120px;
+      object-fit: contain;
+      border: 1px solid #ccc;
+      padding: 4px;
+      border-radius: 10px;
+      background: white;
+    }
+
+    .status-paid {
+      color: green;
+      font-weight: bold;
+    }
+
+    .status-pending {
+      color: red;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>🧾 Generate Customer Bill</h2>
+
+  <form method="post" action="{% url 'owner:generate_all_bills' %}">
+    {% csrf_token %}
+    <div class="text-center mb-4">
+      <button type="submit" class="btn-generate">Generate Monthly Bills for All Customers</button>
+    </div>
+  </form>
+
+  {% if bills %}
+    <h4 class="mb-3 text-success">📋 Monthly Bills - {{ month_str }}</h4>
+
+    {% for bill in bills %}
+      <div class="bill-card">
+        <h5>👤 {{ bill.customer.name }} ({{ bill.customer.user.username }})</h5>
+        <p>🛢 Total Cans: {{ bill.total_cans }}</p>
+        <p>💰 Amount Due: ₹{{ bill.amount_due }}</p>
+        <p>Status:
+          {% if bill.payment_status == 'Paid' %}
+            <span class="status-paid">✔ Paid</span>
+          {% else %}
+            <span class="status-pending">❌ Pending</span>
+          {% endif %}
+        </p>
+        {% if bill.qr_code_base64 %}
+          <div>
+            <img src="data:image/png;base64,{{ bill.qr_code_base64 }}" alt="UPI QR">
+            <p><small>Scan to Pay (GPay/PhonePe)</small></p>
+          </div>
+        {% endif %}
+<a href="{% url 'owner:view_bill_detail' bill.id %}" class="btn btn-sm btn-outline-success mt-2">🧾 View Bill</a>
+
+
+      </div>
+    {% endfor %}
+  {% else %}
+    <p class="text-muted">No bills generated yet for this month.</p>
+  {% endif %}
+
+  <a href="{% url 'owner:owner_dashboard' %}" class="back-link">← Back to Dashboard</a>
+</div>
+
+</body>
+</html>

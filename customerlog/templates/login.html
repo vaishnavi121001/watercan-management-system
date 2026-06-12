@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Customer Login{% endblock %}
+
+{% block content %}
+<style>
+
+</style>
+
+<div class="login-container">
+    <div class="login-card">
+        <h3>Customer Login</h3>
+        <form method="post">
+            {% csrf_token %}
+            {% for field in form %}
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <div class="text-danger">{{ field.errors|striptags }}</div>
+                {% endif %}
+            {% endfor %}
+            <button type="submit" class="btn">Login</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

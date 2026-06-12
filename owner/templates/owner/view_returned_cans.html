@@ -1,0 +1,113 @@
+{% extends 'owner/base.html' %}
+{% block content %}
+
+<style>
+    h2 {
+        text-align: center;
+        margin: 30px 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #2c3e50;
+        text-shadow: 0 0 3px #95a5a6;
+    }
+
+    table {
+        width: 90%;
+        margin: 20px auto 60px;
+        border-collapse: separate;
+        border-spacing: 0 10px;
+        box-shadow: 0 4px 15px rgba(44, 62, 80, 0.1);
+        background: #ffffff;
+        border-radius: 12px;
+        overflow: hidden;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    thead tr {
+        background: #34495e;
+        color: #ecf0f1;
+        font-weight: 600;
+        letter-spacing: 0.8px;
+        font-size: 0.95rem;
+    }
+
+    th, td {
+        padding: 16px 20px;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    tbody tr {
+        background: #f8f9fa;
+        transition: background-color 0.3s ease;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(52, 73, 94, 0.1);
+    }
+
+    tbody tr:hover {
+        background: #dce6f1;
+        cursor: default;
+    }
+
+    tbody tr td:first-child {
+        font-weight: 600;
+        color: #2c3e50;
+    }
+
+    tbody tr td img {
+        border-radius: 8px;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+        object-fit: cover;
+        height: 80px;
+    }
+
+    tbody tr td:nth-child(5) {
+        font-size: 0.9rem;
+        color: #7f8c8d;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        table {
+            width: 100%;
+            font-size: 0.85rem;
+        }
+        th, td {
+            padding: 12px 8px;
+        }
+        tbody tr td img {
+            height: 60px;
+            width: auto;
+        }
+    }
+</style>
+
+<h2>Returned Cans</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Customer</th>
+            <th>Delivery Date</th>
+            <th>Empty Cans Received</th>
+            <th>Proof Photo</th>
+            <th>Uploaded At</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for proof in proofs %}
+        <tr>
+            <td>{{ proof.delivery.schedule.customer.user.username }}</td>
+            <td>{{ proof.delivery.delivery_date }}</td>
+            <td>{{ proof.cans_received_empty }}</td>
+            <td>
+                <img src="{{ proof.photo.url }}" alt="Proof">
+            </td>
+            <td>{{ proof.uploaded_at }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5">No returns found.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

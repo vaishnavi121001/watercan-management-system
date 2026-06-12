@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    body {
+        background-color: #f8f9fa;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .register-container {
+        background: #ffffff;
+        padding: 35px 50px;
+        margin-top: 40px;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    }
+
+    h2 {
+        text-align: center;
+        font-weight: bold;
+        color: #0d6efd;
+        margin-bottom: 30px;
+    }
+
+    label {
+        font-weight: 600;
+        color: #333;
+    }
+
+    input,
+    textarea {
+        width: 100%;
+        padding: 12px;
+        margin-top: 4px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        background: #fdfdfd;
+        transition: all 0.3s ease;
+    }
+
+    input:focus,
+    textarea:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.2);
+        background-color: #fff;
+        outline: none;
+    }
+
+    .btn-primary {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+        font-weight: 600;
+        padding: 10px 25px;
+        font-size: 1rem;
+    }
+
+    .btn-primary:hover {
+        background-color: #0b5ed7;
+        border-color: #0a58ca;
+    }
+
+    .text-danger {
+        font-size: 0.875rem;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    @media (max-width: 768px) {
+        .register-container {
+            padding: 25px;
+        }
+    }
+</style>
+
+<div class="container register-container">
+    <h2>🚚 Delivery Boy Registration</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-6 form-group">
+                <label for="{{ form.username.id_for_label }}">👤 Username</label>
+                {{ form.username }}
+                <div class="text-danger">{{ form.username.errors|striptags }}</div>
+            </div>
+            <div class="col-md-6 form-group">
+                <label for="{{ form.email.id_for_label }}">📧 Email</label>
+                {{ form.email }}
+                <div class="text-danger">{{ form.email.errors|striptags }}</div>
+            </div>
+            <div class="col-md-12 form-group">
+                <label for="{{ form.full_name.id_for_label }}">📝 Full Name</label>
+                {{ form.full_name }}
+                <div class="text-danger">{{ form.full_name.errors|striptags }}</div>
+            </div>
+            <div class="col-md-6 form-group">
+                <label for="{{ form.password1.id_for_label }}">🔒 Password</label>
+                {{ form.password1 }}
+                <div class="text-danger">{{ form.password1.errors|striptags }}</div>
+            </div>
+            <div class="col-md-6 form-group">
+                <label for="{{ form.password2.id_for_label }}">🔒 Confirm Password</label>
+                {{ form.password2 }}
+                <div class="text-danger">{{ form.password2.errors|striptags }}</div>
+            </div>
+            <div class="col-md-6 form-group">
+                <label for="{{ form.phone.id_for_label }}">📱 Phone</label>
+                {{ form.phone }}
+                <div class="text-danger">{{ form.phone.errors|striptags }}</div>
+            </div>
+            <div class="col-md-6 form-group">
+                <label for="{{ form.profile_picture.id_for_label }}">🖼️ Profile Picture</label>
+                {{ form.profile_picture }}
+                <div class="text-danger">{{ form.profile_picture.errors|striptags }}</div>
+            </div>
+            <div class="col-md-12 form-group">
+                <label for="{{ form.address.id_for_label }}">🏠 Address</label>
+                {{ form.address }}
+                <div class="text-danger">{{ form.address.errors|striptags }}</div>
+            </div>
+            <div class="col-md-6 form-group">
+                <label for="{{ form.adhar.id_for_label }}">🆔 Aadhar Number</label>
+                {{ form.adhar }}
+                <div class="text-danger">{{ form.adhar.errors|striptags }}</div>
+            </div>
+            <div class="col-md-6 form-group">
+                <label for="{{ form.adharupload.id_for_label }}">📎 Upload Aadhar</label>
+                {{ form.adharupload }}
+                <div class="text-danger">{{ form.adharupload.errors|striptags }}</div>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary rounded-pill">➕ Register</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

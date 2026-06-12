@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Inventory</title>
+    <style>
+        /* Reset */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: white(135deg, #a0d8ef 0%, #48a9e6 100%);
+            padding: 60px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: #0f172a;
+        }
+
+        .form-card {
+            background: #f0f9ffdd;
+            padding: 30px 40px;
+            max-width: 420px;
+            width: 100%;
+            border-radius: 18px;
+            box-shadow:
+                0 8px 30px rgba(72, 169, 230, 0.35),
+                0 4px 14px rgba(160, 216, 239, 0.3);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .form-card:hover {
+            box-shadow:
+                0 12px 38px rgba(72, 169, 230, 0.55),
+                0 6px 22px rgba(160, 216, 239, 0.55);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 28px;
+            font-weight: 700;
+            font-size: 2rem;
+            color: #0f766e;
+            text-shadow: 0 2px 5px rgba(30, 64, 175, 0.25);
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #334155;
+            user-select: none;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="decimal"],
+        input[type="email"] {
+            width: 100%;
+            padding: 12px 14px;
+            margin-bottom: 18px;
+            border-radius: 12px;
+            border: 1.8px solid #9fc5e8;
+            font-size: 1rem;
+            color: #1e293b;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            background-color: #ffffffee;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="decimal"]:focus,
+        input[type="email"]:focus {
+            outline: none;
+            border-color: #1e40af;
+            box-shadow: 0 0 10px rgba(30, 64, 175, 0.5);
+            background-color: white;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px 0;
+            background-color: #0f766e;
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            box-shadow: 0 6px 18px rgba(30, 64, 175, 0.5);
+            transition: background-color 0.3s ease, transform 0.15s ease;
+            user-select: none;
+        }
+
+        .btn:hover {
+    background-color: #0f766e;
+    transform: scale(1.05);
+    box-shadow: 0 8px 22px rgba(15, 118, 110, 0.7);
+}
+
+    </style>
+</head>
+<body>
+    <div class="form-card">
+        <h2>Add Inventory</h2>
+        <form method="POST">
+            {% csrf_token %}
+
+            <label for="{{ form.name.id_for_label }}">Name:</label>
+            {{ form.name }}
+
+            <label for="{{ form.price.id_for_label }}">Price:</label>
+            {{ form.price }}
+
+            <label for="{{ form.total_cans_added.id_for_label }}">Total Cans Added:</label>
+            {{ form.total_cans_added }}
+
+            <button type="submit" class="btn">Save</button>
+        </form>
+    </div>
+</body>
+</html>

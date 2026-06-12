@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: Arial, sans-serif; padding: 30px; }
+    h2 { color: #0f766e; }
+    .info { margin-bottom: 20px; }
+    .qr { margin-top: 20px; }
+    .status { font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h2>Monthly Bill</h2>
+  <div class="info">
+    <p><strong>Customer:</strong> {{ bill.customer.name }} ({{ bill.customer.user.username }})</p>
+    <p><strong>Month:</strong> {{ bill.month|date:"F Y" }}</p>
+    <p><strong>Total Cans:</strong> {{ bill.total_cans }}</p>
+    <p><strong>Amount Due:</strong> ₹{{ bill.amount_due }}</p>
+    <p><strong>Status:</strong>
+      {% if bill.payment_status == 'Paid' %}
+        <span class="status" style="color: green;">✔ Paid</span>
+      {% else %}
+        <span class="status" style="color: red;">❌ Pending</span>
+      {% endif %}
+    </p>
+  </div>
+  {% if bill.qr_code_base64 %}
+    <div class="qr">
+      <img src="data:image/png;base64,{{ bill.qr_code_base64 }}" width="150" alt="QR Code">
+      <p><small>Scan to pay</small></p>
+    </div>
+  {% endif %}
+</body>
+</html>

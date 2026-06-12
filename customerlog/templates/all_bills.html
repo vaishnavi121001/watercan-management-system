@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}Your Bills{% endblock %}
+
+{% block extra_head %}
+
+{% endblock %}
+
+{% block content %}
+
+<h2>🧾 Monthly Bills</h2>
+<table border="1">
+    <thead>
+        <tr>
+            <th>Month</th>
+            <th>Total Cans</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for bill in bills %}
+        <tr>
+            <td>{{ bill.month|date:"F Y" }}</td>
+            <td>{{ bill.total_cans }}</td>
+            <td>₹{{ bill.amount_due }}</td>
+            <td>{{ bill.payment_status }}</td>
+            <td>
+                {% if bill.payment_status == 'Pending' %}
+                    <a href="{% url 'pay_bill' bill.id %}">Pay Now</a>
+                {% else %}
+                    Paid
+                {% endif %}
+            </td>
+        </tr>
+    {% empty %}
+        <tr>
+            <td colspan="5">No bills found.</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<br><br>
+
+<h2>📦 Bulk Orders (This Month)</h2>
+{% if bulk_orders %}
+<table border="1">
+    <thead>
+        <tr>
+            <th>Event</th>
+            <th>Quantity</th>
+            <th>Unit Price</th>
+            <th>Total Price</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for order in bulk_orders %}
+        <tr>
+            <td>{{ order.event_name }}</td>
+            <td>{{ order.quantity }}</td>
+            <td>{{ order.water_can.price }}</td>
+            <td>₹{{ order.total_price }}</td>
+            <td>{{ order.status }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No bulk orders this month.</p>
+{% endif %}
+
+<div class="container">
+    <a class="btn btn-secondary mt3" href="{% url 'customer_dashboard' %}">← Back to Dashboard</a>
+</div>
+
+{% endblock %}

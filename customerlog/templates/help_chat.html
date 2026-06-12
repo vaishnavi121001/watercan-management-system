@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Help Chat</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Segoe UI', sans-serif;
+            background: #f0f2f5;
+        }
+
+        .chat-container {
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: #5b9df9;
+            padding: 15px 20px;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-header .close-btn {
+            cursor: pointer;
+            font-size: 20px;
+            background: transparent;
+            border: none;
+            color: white;
+        }
+
+        .chat-body {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background: #f9fbfd;
+        }
+
+        .message {
+            margin-bottom: 12px;
+            max-width: 80%;
+            word-wrap: break-word;
+            padding: 10px 14px;
+            border-radius: 16px;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+
+        .user-message {
+            background: #dbe9ff;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+
+        .bot-message {
+            background: #f0f0f0;
+            align-self: flex-start;
+            margin-right: auto;
+        }
+
+        .chat-footer {
+            padding: 10px 15px;
+            background: #fff;
+            border-top: 1px solid #ddd;
+        }
+
+        .chat-footer form {
+            display: flex;
+        }
+
+        .chat-footer textarea {
+            flex: 1;
+            resize: none;
+            border: 1px solid #ccc;
+            border-radius: 16px;
+            padding: 8px 12px;
+            font-size: 14px;
+            margin-right: 8px;
+            height: 36px;
+        }
+
+        .chat-footer button {
+            background: #5b9df9;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 16px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .chat-footer button:hover {
+            background: #367af6;
+        }
+
+        .faq-section {
+            padding: 10px 15px;
+            border-top: 1px solid #eee;
+            background: #f7f9fc;
+            font-size: 13px;
+        }
+
+        .faq-section h4 {
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+        .faq-section ul {
+            padding-left: 18px;
+            margin: 0;
+        }
+
+        .faq-section li {
+            margin-bottom: 6px;
+            cursor: pointer;
+            color: #234f95;
+        }
+
+        .faq-section li:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<div class="chat-container">
+
+    <div class="chat-header">
+        🤖 Water Cans Help Assistant
+        <button class="close-btn" onclick="window.parent.document.getElementById('chatbot-iframe').style.display='none'">&times;</button>
+    </div>
+
+    <div class="chat-body" id="chat-body">
+        {% for chat in chat_logs %}
+            <div class="message user-message"><strong>You:</strong> {{ chat.question }}</div>
+            <div class="message bot-message"><strong>Bot:</strong> {{ chat.response }}</div>
+        {% empty %}
+            <p style="color: gray; text-align: center;">Start chatting with your assistant...</p>
+        {% endfor %}
+
+        {% if response and not previous_chats %}
+            <div class="message bot-message"><strong>Bot:</strong> {{ response }}</div>
+        {% endif %}
+    </div>
+
+    <div class="chat-footer">
+        <form method="post">
+            {% csrf_token %}
+            <textarea name="question" placeholder="Ask a question..."></textarea>
+            <button type="submit">Send</button>
+        </form>
+    </div>
+
+    <div class="faq-section">
+        <h4>💡 FAQ</h4>
+        <ul>
+            <li onclick="fillFAQ('What is the price of a water can?')">What is the price of a water can?</li>
+            <li onclick="fillFAQ('How do I update my delivery schedule?')">How do I update my delivery schedule?</li>
+            <li onclick="fillFAQ('When is my next delivery scheduled?')">When is my next delivery scheduled?</li>
+            <li onclick="fillFAQ('How can I pay my monthly bill?')">How can I pay my monthly bill?</li>
+            <li onclick="fillFAQ('Can I place a bulk order for an event?')">Can I place a bulk order for an event?</li>
+        </ul>
+    </div>
+
+</div>
+
+<script>
+    // Pre-fill question when clicking FAQ
+    function fillFAQ(question) {
+        document.querySelector('textarea[name="question"]').value = question;
+        document.querySelector('textarea[name="question"]').focus();
+    }
+
+    // Scroll to bottom after load
+    window.onload = function() {
+        const chatBody = document.getElementById('chat-body');
+        chatBody.scrollTop = chatBody.scrollHeight;
+    };
+</script>
+
+</body>
+</html>

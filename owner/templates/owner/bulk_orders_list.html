@@ -1,0 +1,130 @@
+{% extends 'owner/base.html' %}
+
+{% block content %}
+<style>
+    body {
+        background-color: white;
+        color: #333;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    h1 {
+        text-align: center;
+        margin: 30px 0;
+        color: #0f766e;
+        font-size: 2rem;
+        text-shadow: 0 0 5px rgba(15, 118, 110, 0.2);
+    }
+
+    table {
+        width: 95%;
+        margin: 0 auto 50px;
+        border-collapse: collapse;
+        background-color: white;
+        border: 1px solid #ddd;
+        box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+
+    thead {
+        background-color: #0f766e;
+    }
+
+    th, td {
+        padding: 14px;
+        text-align: center;
+        font-size: 1rem;
+    }
+
+    th {
+        color: white;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    tbody tr:nth-child(odd) {
+        background-color: #ffffff;
+    }
+
+    tbody tr:hover {
+        background-color: #e6f2f0;
+        transition: background-color 0.3s ease;
+    }
+
+    a {
+        color: #0f766e;
+        font-weight: 600;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    a:hover {
+        color: #0d5e58;
+        text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+        table {
+            width: 100%;
+            font-size: 0.9rem;
+        }
+
+        th, td {
+            padding: 10px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+        }
+    }
+</style>
+
+<h1>📦 Bulk Orders List</h1>
+
+<table>
+    <thead>
+    <tr>
+        <th>Customer</th>
+        <th>Event Name</th>
+        <th>Quantity</th>
+        <th>Delivery Date</th>
+        <th>Delivery Time</th>
+        <th>Delivery Address</th>
+        <th>Delivery Boy</th>
+        <th>Status</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for order in bulk_orders %}
+    <tr>
+        <td>{{ order.customer.user.username }}</td>
+        <td>{{ order.event_name|default:"N/A" }}</td>
+        <td>{{ order.quantity }}</td>
+        <td>{{ order.delivery_date }}</td>
+        <td>{{ order.delivery_time }}</td>
+        <td>{{ order.delivery_address }}</td>
+        <td>
+            {% if order.delivery_boy %}
+                {{ order.delivery_boy.user.username }}
+            {% else %}
+                Not assigned
+            {% endif %}
+        </td>
+        <td>{{ order.status }}</td>
+        <td>
+            <a href="{% url 'owner:assign_bulk_order' order.id %}">Assign / Edit</a>
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="9" style="text-align:center;">No bulk orders found.</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

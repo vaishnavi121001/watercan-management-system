@@ -1,0 +1,94 @@
+<!-- templates/update_delivery_boy.html -->
+{% extends 'owner/base.html' %}
+{% block title %}Update Delivery Boy{% endblock %}
+
+{% block head %}
+<style>
+    /* Container styles */
+    .update-form-container {
+        max-width: 600px;
+        margin: 60px auto;
+        padding: 30px;
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* Headings */
+    .update-form-container h2 {
+        text-align: center;
+        margin-bottom: 24px;
+        color: #0f766e;
+    }
+
+    /* Form elements */
+    .update-form-container label {
+        font-weight: 600;
+        color: #0056b3;
+        margin-top: 12px;
+        display: block;
+    }
+    .update-form-container input,
+    .update-form-container textarea,
+    .update-form-container select {
+        width: 100%;
+        padding: 10px 12px;
+        margin-top: 6px;
+        border: 1px solid #ccd0d5;
+        border-radius: 4px;
+        font-size: 14px;
+        transition: border-color 0.2s;
+    }
+    .update-form-container input:focus,
+    .update-form-container textarea:focus,
+    .update-form-container select:focus {
+        outline: none;
+        border-color: #007bff;
+    }
+
+    /* Submit button */
+    .update-form-container button[type="submit"] {
+        width: 100%;
+        padding: 12px;
+        margin-top: 20px;
+        background-color: #0f766e;
+        color: #ffffff;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    .update-form-container button[type="submit"]:hover {
+        background-color: #0056b3;
+    }
+
+    /* Back link */
+    .back-btn {
+        display: inline-block;
+        margin-top: 16px;
+        color: #ffffff;
+        background-color: #0f766e;
+        padding: 10px 20px;
+        border-radius: 4px;
+        text-decoration: none;
+        transition: background-color 0.2s;
+    }
+    .back-btn:hover {
+        background-color: #117a8b;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="update-form-container">
+    <h2>Update Delivery Boy</h2>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Update Delivery Boy</button>
+    </form>
+    <a href="{% url 'owner:view_delivery_boys' %}" class="back-btn">Back to Delivery Boys List</a>
+</div>
+{% endblock %}

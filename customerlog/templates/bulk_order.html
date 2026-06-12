@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Place Bulk Order{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h2 class="form-title">📦 Place Bulk Order for Event</h2>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    <form method="post" class="bulk-order-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Submit Order</button>
+    </form>
+
+    <a href="{% url 'customer_dashboard' %}" class="btn btn-secondary mt-3">Back to Dashboard</a>
+</div>
+{% endblock %}

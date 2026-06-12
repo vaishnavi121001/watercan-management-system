@@ -1,0 +1,110 @@
+{% extends "delivery/base.html" %}
+
+{% block title %}Bulk Delivery Entry{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow border-0 rounded-4">
+        <div class="card-body">
+            <h2 class="mb-4 text-center fw-bold text-primary">📦 Bulk Delivery Entry</h2>
+
+            <form method="post" enctype="multipart/form-data" id="bulkDeliveryForm">
+                {% csrf_token %}
+
+                <!-- Auto Location -->
+                <div class="mb-3">
+                    <label class="form-label">📍 Current Location</label>
+                    <input type="text" name="auto_location" id="autoLocation" class="form-control" readonly>
+                    <button type="button" class="btn btn-outline-primary mt-2" onclick="getLocation()">Detect Location</button>
+                </div>
+
+                <!-- Delivery Date & Time -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label">🗓️ Delivery Date</label>
+                        <input type="date" name="delivery_date" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">⏰ Delivery Time</label>
+                        <input type="time" name="delivery_time" class="form-control" required>
+                    </div>
+                </div>
+
+                <!-- Excel-style table -->
+                <h5 class="fw-semibold text-dark mb-3">🧾 Enter Delivery Details</h5>
+                <div class="table-responsive mb-4">
+                    <table class="table table-bordered" id="deliveryTable">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Customer Name</th>
+                                <th>Address</th>
+                                <th>Cans Delivered</th>
+                                <th>Empty Cans Received</th>
+                                <th>Proof Photo</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <tr>
+                                <td><input type="text" name="customer_name[]" class="form-control" required></td>
+                                <td><input type="text" name="address[]" class="form-control" required></td>
+                                <td><input type="number" name="cans_delivered[]" class="form-control" min="0" required></td>
+                                <td><input type="number" name="cans_received[]" class="form-control" min="0" required></td>
+                                <td><input type="file" name="proof_photo[]" class="form-control"></td>
+                                <td><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">🗑️</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button type="button" class="btn btn-secondary" onclick="addRow()">➕ Add Row</button>
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-success px-5 rounded-pill">✅ Submit Deliveries</button>
+                    <a href="{% url 'delivery:dashboard' %}" class="btn btn-outline-secondary ms-3 rounded-pill">Back</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- JS for geolocation and dynamic table -->
+<script>
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition, showError);
+        } else {
+            alert("Geolocation is not supported by your browser.");
+        }
+    }
+
+    function showPosition(position) {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+        const location = `https://www.google.com/maps?q=${lat},${lon}`;
+        document.getElementById("autoLocation").value = location;
+    }
+
+    function showError(error) {
+        alert("Error fetching location.");
+    }
+
+    function addRow() {
+        const table = document.getElementById("tableBody");
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td><input type="text" name="customer_name[]" class="form-control" required></td>
+            <td><input type="text" name="address[]" class="form-control" required></td>
+            <td><input type="number" name="cans_delivered[]" class="form-control" min="0" required></td>
+            <td><input type="number" name="cans_received[]" class="form-control" min="0" required></td>
+            <td><input type="file" name="proof_photo[]" class="form-control"></td>
+            <td><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">🗑️</button></td>
+        `;
+        table.appendChild(row);
+    }
+
+    function removeRow(button) {
+        const row = button.closest("tr");
+        row.remove();
+    }
+</script>
+{% endblock %}
